@@ -1,0 +1,8 @@
+[[hooks.PreToolUse]]
+matcher = "Bash|apply_patch|Edit|Write"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = 'node "$(git rev-parse --show-toplevel)/hooks/mode-guard.js"'
+timeout = 3
+statusMessage = "Checking learn/dev mode"

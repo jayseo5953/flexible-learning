@@ -24,13 +24,13 @@ Framework templates live in `templates/` and define the expected shape of these 
 { "dev": false }
 ```
 
-Missing or invalid mode state defaults to learn mode. Hook enforcement is the authority for write access:
+Missing mode state defaults to dev mode so a freshly cloned framework can be maintained without bootstrapping local runtime state. Invalid mode state defaults to learn mode. Hook enforcement is the authority for write access:
 
 - Learn mode permits learner session/progress updates for the active instance.
 - Learn mode blocks framework, examples, profile, and curriculum edits.
 - Dev mode permits framework and instance maintenance.
 
-Hook behavior is documented in `hooks/` and remains non-executable until the Codex hook schema is verified.
+Hook behavior is enforced by a repo-local Codex `PreToolUse` hook registered in `.codex/config.toml` and implemented by `hooks/mode-guard.js`.
 
 ## Version Source
 

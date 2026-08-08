@@ -16,9 +16,11 @@ When a user names an instance, use that instance under `learn/<instance>/`. If t
 
 `.mode` controls editing mode:
 
-- Missing or invalid `.mode` means learn mode.
+- Missing `.mode` means dev mode.
+- Invalid `.mode` means learn mode.
 - Learn mode is for tutoring and progress updates.
 - Dev mode is for changing the framework, examples, templates, skills, hooks, profiles, or curricula.
+- Include the current mode in every assistant response. Read `.mode` when needed; report `dev` when `.mode` is missing or has `"dev": true`, and report `learn` when `.mode` is invalid or has `"dev": false`.
 
 Hook policy in `hooks/` is the enforcement authority.
 
