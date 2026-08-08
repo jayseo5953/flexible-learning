@@ -13,9 +13,25 @@ function readStdin() {
 
 function readJson(filePath) {
   try {
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
-  } catch {
-    return null;
+    return {
+      exists: true,
+      valid: true,
+      value: JSON.parse(fs.readFileSync(filePath, "utf8")),
+    };
+  } catch (error) {
+    if (error && error.code === "ENOENT") {
+      return {
+        exists: false,
+        valid: false,
+        value: null,
+      };
+    }
+
+    return {
+      exists: true,
+      valid: false,
+      value: null,
+    };
   }
 }
 
@@ -37,18 +53,26 @@ function normalizeRelative(candidate) {
 }
 
 function getMode() {
-  const mode = readJson(modePath);
-  if (!mode) {
+  const result = readJson(modePath);
+  if (!result.exists) {
     return {
       dev: true,
       activeInstance: null,
     };
   }
 
+  if (!result.valid) {
+    return {
+      dev: false,
+      activeInstance: null,
+    };
+  }
+
+  const mode = result.value;
   if (mode.dev !== true) {
     return {
       dev: false,
-      activeInstance: mode && typeof mode.activeInstance === "string" ? mode.activeInstance : null,
+      activeInstance: typeof mode.activeInstance === "string" ? mode.activeInstance : null,
     };
   }
 
@@ -116,15 +140,17 @@ function collectPatchTargets(text) {
 }
 
 function looksWriteLikeCommand(command) {
-  return /\b(apply_patch|cat|cp|mv|mkdir|rm|sed|perl|tee|touch|chmod|chown|git\s+(add|commit|reset|checkout|restore|clean|mv|rm)|npm\s+(install|update)|pnpm\s+(install|update)|yarn\s+(add|install|upgrade))\b|>>?|<<|<<<|\b(node|python3?|ruby|bash|zsh|sh)\b.*\b(writeFileSync|appendFileSync|openSync|unlinkSync|rmSync|mkdirSync)\b/.test(
+  return /\b(apply_patch|cp|mv|mkdir|rm|perl|tee|touch|chmod|chown|git\s+(add|commit|reset|checkout|restore|clean|mv|rm)|npm\s+(install|update)|pnpm\s+(install|update)|yarn\s+(add|install|upgrade))\b|>>?|<<|<<<|\b(cat|sed)\b.*>>?|\b(node|python3?|ruby|bash|zsh|sh)\b.*\b(writeFileSync|appendFileSync|openSync|unlinkSync|rmSync|mkdirSync)\b/.test(
     command,
   );
 }
 
 function collectCommandTargets(command) {
   const targets = new Set();
+  const pathLike =
+    "(?:\\./)?(?:AGENTS\\.md|package\\.json|\\.gitignore|\\.mode|docs/[^\\s'\"]+|templates/[^\\s'\"]+|skills/[^\\s'\"]+|hooks/[^\\s'\"]+|learn/[^\\s'\"]+|profile\\.md|curriculum\\.md|sessions\\.md)";
   const quotedOrBarePath =
-    /(?:^|\s)(?:['"]([^'"]+)['"]|((?:\.\/)?(?:AGENTS\.md|package\.json|\.gitignore|\.mode|docs\/[^\s'"]+|templates\/[^\s'"]+|skills\/[^\s'"]+|hooks\/[^\s'"]+|examples\/[^\s'"]+|learn\/[^\s'"]+|profile\.md|curriculum\.md|sessions\.md)))/g;
+    new RegExp(`(?:^|\\s)(?:['"](${pathLike})['"]|(${pathLike}))`, "g");
 
   let match;
   while ((match = quotedOrBarePath.exec(command)) !== null) {
@@ -220,7 +246,7 @@ function main() {
     block(
       `Learn mode blocks writes to ${blocked.join(", ")}. Allowed targets are ${[
         ...allowed,
-      ].join(", ")}. Switch to /mode dev for framework, profile, curriculum, hook, template, doc, or example edits.`,
+      ].join(", ")}. Switch to /mode dev for framework, profile, curriculum, hook, template, or doc edits.`,
     );
   }
 }

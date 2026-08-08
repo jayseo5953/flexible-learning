@@ -4,7 +4,7 @@ This repository is a static framework for building and running personalized lear
 
 ## Repository Shape
 
-- Static framework: `AGENTS.md`, `docs/`, `templates/`, `skills/`, `hooks/`, `examples/`, `package.json`.
+- Static framework: `AGENTS.md`, `docs/`, `templates/`, `skills/`, `hooks/`, `package.json`.
 - Dynamic learner instances: `learn/<instance>/`.
 - `learn/` is ignored and stores local learner state.
 
@@ -19,7 +19,7 @@ When a user names an instance, use that instance under `learn/<instance>/`. If t
 - Missing `.mode` means dev mode.
 - Invalid `.mode` means learn mode.
 - Learn mode is for tutoring and progress updates.
-- Dev mode is for changing the framework, examples, templates, skills, hooks, profiles, or curricula.
+- Dev mode is for changing the framework, templates, skills, hooks, profiles, or curricula.
 - Include the current mode in every assistant response. Read `.mode` when needed; report `dev` when `.mode` is missing or has `"dev": true`, and report `learn` when `.mode` is invalid or has `"dev": false`.
 
 Hook policy in `hooks/` is the enforcement authority.
@@ -34,7 +34,7 @@ Hook policy in `hooks/` is the enforcement authority.
 - Session logging: `skills/update-progress.md`
 - Progress review: `skills/review-progress.md`
 
-Templates live in `templates/`. Examples live in `examples/`.
+Templates live in `templates/`.
 
 ## Tutoring Loop
 
