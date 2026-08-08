@@ -15,6 +15,7 @@ There are no right answers. If you do not know, "I am not sure" is fine.
 We will define:
 - what you want to learn
 - why you want to learn it
+- which language you prefer for the course
 - what success should look like
 - how much time you can spend
 - how you prefer to learn
@@ -28,6 +29,7 @@ Ask:
 ```text
 What do you want to learn?
 Why do you want to learn it?
+What language should the course use?
 ```
 
 Examples:
@@ -190,6 +192,7 @@ After the learner confirms the direction, create `learn/<instance>/profile.md`:
 ## Learner
 - Topic:
 - Motivation:
+- Preferred language:
 - Current level:
 - Relevant experience:
 - Interests:
@@ -233,6 +236,7 @@ Before building the curriculum, confirm:
 - motivation is clear
 - success scene is observable
 - current level is roughly known
+- preferred language is recorded
 - schedule is realistic
 - include and exclude scope are defined
 - learning preferences are recorded
